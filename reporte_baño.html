@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reporte de Baño</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #d6eeff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(0,100,200,0.13);
+      padding: 36px 32px 32px;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .header .icon {
+      font-size: 2.4rem;
+      margin-bottom: 6px;
+    }
+
+    .header h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #1565c0;
+      letter-spacing: -0.3px;
+    }
+
+    .header p {
+      font-size: 0.85rem;
+      color: #5a7fa8;
+      margin-top: 4px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1a3a5c;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid #b3d4f5;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: #1a3a5c;
+      background: #f0f8ff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #1976d2;
+      background: #fff;
+    }
+
+    /* Dropdown button */
+    .dropdown-wrapper {
+      position: relative;
+    }
+
+    .dropdown-btn {
+      width: 100%;
+      padding: 11px 16px;
+      background: #f0f8ff;
+      border: 2px solid #b3d4f5;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: #5a7fa8;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .dropdown-btn.selected {
+      color: #1a3a5c;
+      font-weight: 600;
+    }
+
+    .dropdown-btn:hover, .dropdown-btn:focus {
+      border-color: #1976d2;
+      background: #fff;
+      outline: none;
+    }
+
+    .dropdown-btn .arrow {
+      transition: transform 0.2s;
+      font-size: 0.8rem;
+      color: #1976d2;
+    }
+
+    .dropdown-btn.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 2px solid #b3d4f5;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,80,180,0.13);
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .dropdown-list.open {
+      display: block;
+    }
+
+    .dropdown-list div {
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 0.97rem;
+      color: #1a3a5c;
+      transition: background 0.15s;
+    }
+
+    .dropdown-list div:hover {
+      background: #d6eeff;
+      color: #1565c0;
+    }
+
+    .dropdown-list div.active {
+      background: #1976d2;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Descripción opcional */
+    .optional-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1a3a5c;
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .optional-tag {
+      font-size: 0.73rem;
+      font-weight: 400;
+      color: #5a9fd4;
+      text-transform: none;
+      letter-spacing: 0;
+      margin-left: 6px;
+    }
+
+    .optional-hint {
+      font-size: 0.78rem;
+      color: #7aa8cc;
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 2px solid #b3d4f5;
+      border-radius: 10px;
+      font-size: 0.97rem;
+      color: #1a3a5c;
+      background: #f0f8ff;
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #1976d2;
+      background: #fff;
+    }
+
+    /* Botón reportar */
+    .btn-reportar {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #e53935, #c62828);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.13rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+      box-shadow: 0 4px 14px rgba(198,40,40,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-reportar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(198,40,40,0.32);
+    }
+
+    .btn-reportar:active {
+      transform: translateY(0);
+    }
+
+    /* Toast / mensaje */
+    .toast {
+      display: none;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.97rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .toast.success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1.5px solid #a5d6a7;
+    }
+
+    .toast.error {
+      background: #fff3e0;
+      color: #e65100;
+      border: 1.5px solid #ffcc80;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1.5px solid #d6eeff;
+      margin: 22px 0;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="icon">🚻</div>
+    <h1>Reporte de Baño</h1>
+    <p>Completá los datos para notificar a tutoría</p>
+  </div>
+
+  <!-- Nombre -->
+  <div class="field">
+    <label for="nombre">Nombre del alumno</label>
+    <input type="text" id="nombre" placeholder="Ej: Juan García" autocomplete="off" />
+  </div>
+
+  <!-- Generación -->
+  <div class="field">
+    <label>Generación</label>
+    <div class="dropdown-wrapper">
+      <button class="dropdown-btn" id="btnGeneracion" onclick="toggleDropdown('generacion')" type="button">
+        <span id="generacionTexto">Seleccioná tu generación</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-list" id="dropdownGeneracion">
+        <div onclick="selectOption('generacion', 'Séptimo')">Séptimo</div>
+        <div onclick="selectOption('generacion', 'Octavo')">Octavo</div>
+        <div onclick="selectOption('generacion', 'Noveno')">Noveno</div>
+        <div onclick="selectOption('generacion', '1° EMS')">1° EMS</div>
+        <div onclick="selectOption('generacion', '2° EMS')">2° EMS</div>
+        <div onclick="selectOption('generacion', '3° EMS')">3° EMS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Baño -->
+  <div class="field">
+    <label>Número de baño</label>
+    <div class="dropdown-wrapper">
+      <button class="dropdown-btn" id="btnBaño" onclick="toggleDropdown('baño')" type="button">
+        <span id="bañoTexto">Seleccioná el número de baño</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="dropdown-list" id="dropdownBaño">
+        <div onclick="selectOption('baño', '001')">001</div>
+        <div onclick="selectOption('baño', '002')">002</div>
+        <div onclick="selectOption('baño', '003')">003</div>
+        <div onclick="selectOption('baño', '004')">004</div>
+        <div onclick="selectOption('baño', '005')">005</div>
+        <div onclick="selectOption('baño', '006')">006</div>
+        <div onclick="selectOption('baño', '007')">007</div>
+        <div onclick="selectOption('baño', '008')">008</div>
+        <div onclick="selectOption('baño', '009')">009</div>
+        <div onclick="selectOption('baño', '010')">010</div>
+        <div onclick="selectOption('baño', '011')">011</div>
+        <div onclick="selectOption('baño', '012')">012</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Descripción (opcional) -->
+  <div class="field">
+    <label class="optional-label">
+      Descripción del problema
+      <span class="optional-tag">— Opcional</span>
+    </label>
+    <p class="optional-hint">Este campo no es obligatorio. Podés dejarlo en blanco.</p>
+    <textarea id="descripcion" placeholder="Ej: El grifo no cierra, falta papel, hay agua en el piso..."></textarea>
+  </div>
+
+  <!-- Botón reportar -->
+  <button class="btn-reportar" onclick="enviarReporte()">
+    🚨 Reportar baño en malas condiciones
+  </button>
+
+  <!-- Mensaje resultado -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  const state = { generacion: null, baño: null };
+
+  function toggleDropdown(tipo) {
+    const id = tipo === 'generacion' ? 'dropdownGeneracion' : 'dropdownBaño';
+    const btnId = tipo === 'generacion' ? 'btnGeneracion' : 'btnBaño';
+    const list = document.getElementById(id);
+    const btn = document.getElementById(btnId);
+
+    // Cerrar el otro
+    const otherId = tipo === 'generacion' ? 'dropdownBaño' : 'dropdownGeneracion';
+    const otherBtnId = tipo === 'generacion' ? 'btnBaño' : 'btnGeneracion';
+    document.getElementById(otherId).classList.remove('open');
+    document.getElementById(otherBtnId).classList.remove('open');
+
+    list.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  function selectOption(tipo, valor) {
+    state[tipo] = valor;
+    const textoId = tipo === 'generacion' ? 'generacionTexto' : 'bañoTexto';
+    const btnId = tipo === 'generacion' ? 'btnGeneracion' : 'btnBaño';
+    const listId = tipo === 'generacion' ? 'dropdownGeneracion' : 'dropdownBaño';
+
+    document.getElementById(textoId).textContent = valor;
+    document.getElementById(btnId).classList.add('selected');
+    document.getElementById(btnId).classList.remove('open');
+    document.getElementById(listId).classList.remove('open');
+
+    // Marcar activo
+    const items = document.querySelectorAll(`#${listId} div`);
+    items.forEach(item => {
+      item.classList.toggle('active', item.textContent === valor);
+    });
+  }
+
+  // Cerrar dropdowns al clickear fuera
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.dropdown-wrapper')) {
+      document.querySelectorAll('.dropdown-list').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.dropdown-btn').forEach(b => b.classList.remove('open'));
+    }
+  });
+
+  function enviarReporte() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const generacion = state.generacion;
+    const baño = state.baño;
+    const descripcion = document.getElementById('descripcion').value.trim();
+    const toast = document.getElementById('toast');
+
+    toast.className = 'toast';
+    toast.style.display = 'none';
+
+    if (!nombre || !generacion || !baño) {
+      toast.textContent = '⚠️ No se pudo enviar el reporte. Por favor completá todos los campos obligatorios (nombre, generación y número de baño).';
+      toast.classList.add('error');
+      toast.style.display = 'block';
+      return;
+    }
+
+    // Aquí iría la llamada al backend para enviar el mail
+    console.log('Reporte enviado:', { nombre, generacion, baño, descripcion });
+
+    toast.innerHTML = `✅ ¡Reporte enviado correctamente! Tutoría fue notificada.<br><small style="font-weight:400;font-size:0.82rem;">Alumno: ${nombre} | Generación: ${generacion} | Baño: ${baño}</small>`;
+    toast.classList.add('success');
+    toast.style.display = 'block';
+
+    // Reset
+    document.getElementById('nombre').value = '';
+    document.getElementById('descripcion').value = '';
+    document.getElementById('generacionTexto').textContent = 'Seleccioná tu generación';
+    document.getElementById('bañoTexto').textContent = 'Seleccioná el número de baño';
+    document.getElementById('btnGeneracion').classList.remove('selected');
+    document.getElementById('btnBaño').classList.remove('selected');
+    document.querySelectorAll('.dropdown-list div').forEach(d => d.classList.remove('active'));
+    state.generacion = null;
+    state.baño = null;
+  }
+</script>
+</body>
+</html>
